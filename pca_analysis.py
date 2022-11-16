@@ -16,27 +16,27 @@ def add_noise(k, I, SNR):
     return 'k somehow got an invalid value'
 
 
-processed_list = [_ for _ in os.listdir('Images/') if _.startswith('proc_')]
+processed_list = [_ for _ in os.listdir('Training Images/') if _.startswith('proc_')]
 
 data = []
 for filename in processed_list:
-    data.append(cv2.imread('Images/'+filename, cv2.IMREAD_UNCHANGED))
+    data.append(cv2.imread('Training Images/'+filename, cv2.IMREAD_UNCHANGED))
 data = np.stack(data)
 
 fig, ax = plt.subplots(figsize=(8, 8))
-cmap_points = iter(plt.cm.Greens(np.linspace(0.2, 0.8, 10)))
+cmap_points = iter(plt.cm.Greens(np.linspace(0.2, 0.8, 5)))
 
-for SNR in range(10, 100, 10):
+for SNR in range(0, 50, 10):
     noise_type = np.random.randint(3, size=len(processed_list))
     noisy_images = []
     for _ in range(len(processed_list)):
-        noisy_images.append(add_noise(noise_type[_], data[_], SNR).flatten())
+        noisy_images.append(add_noise(noise_type[_], data[_], np.power(10, SNR/10)).flatten())
     noisy_data = np.stack(noisy_images)
 
     pca = PCA(n_components=17)
     pca.fit(noisy_data)
     c = next(cmap_points)
-    ax.plot(np.cumsum(pca.explained_variance_ratio_), c=c, label=f'SNR={SNR}')
+    ax.plot(np.cumsum(pca.explained_variance_ratio_), c=c, label=f'SNR={SNR} dB')
     ax.set_ylabel('explained variance ratio')
     ax.set_xlabel('# of components')
 
