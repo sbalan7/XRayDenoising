@@ -21,19 +21,20 @@ processed_list = [_ for _ in os.listdir('Training Images/') if _.startswith('pro
 data = []
 for filename in processed_list:
     data.append(cv2.imread('Training Images/'+filename, cv2.IMREAD_UNCHANGED))
-data = np.stack(data)
 
+'''
 fig, ax = plt.subplots(figsize=(8, 8))
 cmap_points = iter(plt.cm.Greens(np.linspace(0.2, 0.8, 5)))
+'''
 
 for SNR in range(0, 50, 10):
     noise_type = np.random.randint(3, size=len(processed_list))
-    noisy_images = []
     for _ in range(len(processed_list)):
-        noisy_images.append(add_noise(noise_type[_], data[_], np.power(10, SNR/10)).flatten())
-    noisy_data = np.stack(noisy_images)
+        noisy_image = add_noise(noise_type[_], data[_], np.power(10, SNR/10))
+        pca = PCA(n_components=500).fit(noisy_image)
+        print(f'{np.sum(pca.explained_variance_ratio_)} components for {processed_list[_]} at {SNR} dB')
 
-    pca = PCA(n_components=17)
+'''    
     pca.fit(noisy_data)
     c = next(cmap_points)
     ax.plot(np.cumsum(pca.explained_variance_ratio_), c=c, label=f'SNR={SNR} dB')
@@ -43,7 +44,7 @@ for SNR in range(0, 50, 10):
 plt.title('Explained variance to # of components for noisy images')
 plt.legend()
 plt.show()
-
+'''
 '''
 fig, axs = plt.subplots(1, 3, figsize=(18, 6))
 for filename in processed_list:
