@@ -34,7 +34,7 @@ for SNR in range(0, 50, 10):
         pca = PCA(n_components=500).fit(noisy_image)
         print(f'{np.sum(pca.explained_variance_ratio_)} components for {processed_list[_]} at {SNR} dB')
 
-'''    
+'''
     pca.fit(noisy_data)
     c = next(cmap_points)
     ax.plot(np.cumsum(pca.explained_variance_ratio_), c=c, label=f'SNR={SNR} dB')

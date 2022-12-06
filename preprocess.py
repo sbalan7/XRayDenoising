@@ -27,7 +27,7 @@ for filename in filenames:
         print(f'After grayscale, Shape = {I.shape} and Data = {I.dtype}')
         I = cv2.resize(I, (1000, 1000))
         print(f'After resize, Shape = {I.shape} and Data = {I.dtype}')
-        cv2.imwrite('Images/proc_'+filename, I)
+        cv2.imwrite('Training Images/proc_'+filename, I)
 
 
 
