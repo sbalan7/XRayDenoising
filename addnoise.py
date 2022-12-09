@@ -23,7 +23,11 @@ def add_poisson_noise(image, SNR):
 def add_salt_pepper_noise(image, SNR=100, sp_ratio=0.5):
     I = np.copy(image)
     contamination = 1/(SNR+1)
+    rnd = np.random.rand(I.shape[0], I.shape[1])
 
+    I[rnd < contamination * sp_ratio] = 0
+    I[rnd > 1 - contamination * sp_ratio] = 255
+    '''
     salt = np.ceil(contamination * image.size * sp_ratio)
     salt_loc = np.array([np.random.randint(0, i-1, int(salt)) for i in image.shape])
     I[salt_loc] = 255
@@ -31,7 +35,7 @@ def add_salt_pepper_noise(image, SNR=100, sp_ratio=0.5):
     pepper = np.ceil(contamination * image.size * (1-sp_ratio))
     pepper_loc = np.array([np.random.randint(0, i-1, int(pepper)) for i in image.shape])
     I[pepper_loc] = 0
-
+    '''
     return I
 
 '''
